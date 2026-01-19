@@ -1,5 +1,7 @@
 import os
 
+from google.genai import types
+
 
 def get_file_content(working_directory, file_path):
     working_dir_abs = os.path.abspath(working_directory)
@@ -20,3 +22,18 @@ def get_file_content(working_directory, file_path):
         print("You do not have permission to read the file.")
     except Exception as e:
         print(f"Something unexpected happend. Error: {e}")
+
+
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Reads the first 10000 characters of a specified file, relative to the working directory and returns them as a string.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="File path and name to read the file from, relative to the working directory (default is the working directory itself).",
+            ),
+        },
+    ),
+)
