@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 
 from dotenv import load_dotenv
 from google import genai
@@ -29,7 +30,7 @@ def main():
 
     messages = [types.Content(role="user", parts=[types.Part(text=args.user_prompt)])]
 
-    for _ in range(20):  # while True:
+    for i in range(20):  # while True:
         # 1. Get response from model
         response = get_model_response(
             client, model, messages, [available_functions], system_prompt
@@ -51,6 +52,11 @@ def main():
 
             # Add the tool outputs back to message history
             messages.append(types.Content(role="tool", parts=tool_parts))
+
+            # Provide message for loop ending before final text response
+            if i == 19:
+                print("Exiting due to maximum calls reached without response.")
+                sys.exit(1)
 
             # Loop again so the model can see the tool results
             continue
